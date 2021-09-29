@@ -1,10 +1,10 @@
 import { Component } from "react";
-import ButtonBlock from "../buttonBlock/ButtonBlock";
-import Notification from "../notification/Notification";
-import Section from "../section/Section";
-import Statistics from "../statistics/Statistics";
+import ButtonBlock from "./buttonBlock/ButtonBlock";
+import Notification from "./notification/Notification";
+import Section from "./section/Section";
+import Statistics from "./statistics/Statistics";
 
-class Main extends Component {
+class App extends Component {
   state = {
     good: 0,
     neutral: 0,
@@ -60,4 +60,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default App;
