@@ -1,61 +1,62 @@
-import { Component } from "react";
-import ButtonBlock from "./buttonBlock/ButtonBlock";
-import Notification from "./notification/Notification";
-import Section from "./section/Section";
-import Statistics from "./statistics/Statistics";
+import React, { Component } from "react";
+import ContactForm from "./contactForm/ContactForm";
+import Filter from "./filter/Filter";
+import ContactList from "./contactList/ContactList";
+import { v4 as uuidv4 } from "uuid";
 
 class App extends Component {
   state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+    contacts: [
+      { id: uuidv4(), name: "Rosie Simpson", number: "459-12-56" },
+      { id: uuidv4(), name: "Hermione Kline", number: "443-89-12" },
+      { id: uuidv4(), name: "Eden Clements", number: "645-17-79" },
+      { id: uuidv4(), name: "Annie Copeland", number: "227-91-26" },
+    ],
+    filter: "",
+  };
+  checkExist = (newContact) => {
+    const { contacts } = this.state;
+    contacts.some((contact) => contact.number === newContact.number)
+      ? alert(
+          `One of your contacts is alredy has phone number ${newContact.number} `
+        )
+      : this.handleAddContact(newContact);
   };
 
-  addFeedback = (e) => {
-    const name = e.target.name;
-    this.setState((prev) => ({ [name]: prev[name] + 1 }));
+  handleAddContact = (newContact) => {
+    const { contacts } = this.state;
+    this.setState({ contacts: [...contacts, { ...newContact, id: uuidv4() }] });
   };
 
-  calcFeedbackSumm = () => {
-    const { good, neutral, bad } = this.state;
-    const summ = good + neutral + bad;
-    return summ;
+  handleFilter = (e) => {
+    const { value } = e.currentTarget;
+    this.setState({ filter: value });
   };
 
-  calcFeedbackPercentage = () => {
-    const total = this.calcFeedbackSumm();
-    const { good } = this.state;
-    const percentage = total ? (good / total) * 100 : 0;
-    return Math.round(percentage);
+  handleDelete = (id) => {
+    const filteredContacts = this.state.contacts.filter(
+      (contact) => contact.id !== id
+    );
+
+    this.setState({ contacts: filteredContacts });
   };
 
   render() {
-    const { good, neutral, bad } = this.state;
-    const total = this.calcFeedbackSumm();
-    const percentage = this.calcFeedbackPercentage();
-    const { addFeedback } = this;
+    const { contacts, filter } = this.state;
+    const { handleDelete, handleFilter, checkExist } = this;
     return (
-      <>
-        <Section title="Please leave your feedback">
-          <ButtonBlock
-            addFeedback={addFeedback}
-            options={["good", "neutral", "bad"]}
-          />
-        </Section>
-        {total === 0 ? (
-          <Notification message="No feedback given" />
-        ) : (
-          <Section title="Statistics">
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              total={total}
-              percentage={percentage}
-            />
-          </Section>
-        )}
-      </>
+      <div>
+        <h1>Phonebook</h1>
+        <ContactForm checkExist={checkExist} />
+
+        <h2>Contacts</h2>
+        <Filter inputValue={filter} handleFilter={handleFilter} />
+        <ContactList
+          contacts={contacts}
+          inputValue={filter}
+          handleDelete={handleDelete}
+        />
+      </div>
     );
   }
 }
