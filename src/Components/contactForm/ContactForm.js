@@ -26,7 +26,7 @@ class ContactForm extends Component {
     const { name, number } = this.state;
     const { handleSubmit, handleContactData } = this;
     return (
-      <form onSubmit={handleSubmit} className={styles.addForm}>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <label className={styles.formLabel}>
           Name
           <input

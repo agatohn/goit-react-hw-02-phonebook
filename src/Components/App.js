@@ -32,18 +32,21 @@ class App extends Component {
     const { value } = e.currentTarget;
     this.setState({ filter: value });
   };
+  filteredContacts = () =>
+    this.state.contacts.filter(({ name }) =>
+      name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
 
   handleDelete = (id) => {
     const filteredContacts = this.state.contacts.filter(
       (contact) => contact.id !== id
     );
-
     this.setState({ contacts: filteredContacts });
   };
 
   render() {
-    const { contacts, filter } = this.state;
-    const { handleDelete, handleFilter, checkExist } = this;
+    const { filter } = this.state;
+    const { handleDelete, handleFilter, checkExist, filteredContacts } = this;
     return (
       <div>
         <h1>Phonebook</h1>
@@ -52,8 +55,7 @@ class App extends Component {
         <h2>Contacts</h2>
         <Filter inputValue={filter} handleFilter={handleFilter} />
         <ContactList
-          contacts={contacts}
-          inputValue={filter}
+          contacts={filteredContacts()}
           handleDelete={handleDelete}
         />
       </div>
