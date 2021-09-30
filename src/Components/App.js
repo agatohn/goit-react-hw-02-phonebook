@@ -14,18 +14,20 @@ class App extends Component {
     ],
     filter: "",
   };
-  checkExist = (newContact) => {
+  checkExistAndAdd = (newContact) => {
     const { contacts } = this.state;
-    contacts.some((contact) => contact.number === newContact.number)
+    contacts.some(
+      (contact) =>
+        contact.name.toLocaleLowerCase() ===
+          newContact.name.toLocaleLowerCase() ||
+        contacts.some((contact) => contact.number === newContact.number)
+    )
       ? alert(
-          `One of your contacts is alredy has phone number ${newContact.number} `
+          `Friend ${newContact.name} or number ${newContact.number} is alredy exist`
         )
-      : this.handleAddContact(newContact);
-  };
-
-  handleAddContact = (newContact) => {
-    const { contacts } = this.state;
-    this.setState({ contacts: [...contacts, { ...newContact, id: uuidv4() }] });
+      : this.setState({
+          contacts: [...contacts, { ...newContact, id: uuidv4() }],
+        });
   };
 
   handleFilter = (e) => {
@@ -46,11 +48,12 @@ class App extends Component {
 
   render() {
     const { filter } = this.state;
-    const { handleDelete, handleFilter, checkExist, filteredContacts } = this;
+    const { handleDelete, handleFilter, checkExistAndAdd, filteredContacts } =
+      this;
     return (
       <div>
         <h1>Phonebook</h1>
-        <ContactForm checkExist={checkExist} />
+        <ContactForm checkExist={checkExistAndAdd} />
 
         <h2>Contacts</h2>
         <Filter inputValue={filter} handleFilter={handleFilter} />
